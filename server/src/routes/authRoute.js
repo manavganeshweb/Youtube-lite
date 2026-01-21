@@ -23,9 +23,9 @@ router.get("/google", passport.authenticate("google", { scope: ["profile", "emai
 
 router.get(
   "/google/callback",
-  passport.authenticate("google", { failureRedirect: `${process.env.CORS_ORIGIN}/login`, session: false }),
+  passport.authenticate("google", { failureRedirect: `${process.env.CLIENT_URL}/login`, session: false }),
   (req, res) => {
-    if (!req.user) return res.redirect(`${process.env.CORS_ORIGIN}/login`);
+    if (!req.user) return res.redirect(`${process.env.CLIENT_URL}/login`);
 
 
     const token = jwt.sign(
@@ -41,7 +41,7 @@ router.get(
       picture: req.user.picture || null,
     };
 
-    res.redirect(`${process.env.CORS_ORIGIN}/home?token=${token}&user=${encodeURIComponent(
+    res.redirect(`${process.env.CLIENT_URL}/home?token=${token}&user=${encodeURIComponent(
         JSON.stringify(safeUser)
       )}`);
   }
