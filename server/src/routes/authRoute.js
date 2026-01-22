@@ -39,8 +39,17 @@ router.get(
       process.env.JWT_SECRET,
       { expiresIn: process.env.ACCESS_TOKEN_EXPIRY }
     );
+    const safeUser = {
+      id: req.user.id,
+      name: req.user.name,
+      email: req.user.email,
+      picture: req.user.picture || null,
+    };
 
-    res.redirect(`${process.env.CLIENT_URL}/home?token=${token}`);
+    res.redirect(`${process.env.CLIENT_URL}/home?token=${token}&user=${encodeURIComponent(
+        JSON.stringify(safeUser)
+      )}`);
+
   }
 );
 
