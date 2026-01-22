@@ -8,10 +8,16 @@ dotenv.config();
 const router = express.Router();
 const pool = new Pool({
    connectionString: process.env.DATABASE_URL,
-  ssl: true,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   max: 5,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 20000,
+  keepAlive: true,
+});
+pool.on("error", (err) => {
+  console.error("Unexpected PG pool error", err);
 });
 
 cloudinary.config({

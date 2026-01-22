@@ -6,11 +6,14 @@ dotenv.config();
 const { Pool } = pkg;
 
 const pool = new Pool({
- connectionString: process.env.DATABASE_URL,
-  ssl: true,
+  connectionString: process.env.DATABASE_URL,
+  ssl: {
+    rejectUnauthorized: false,
+  },
   max: 5,
   idleTimeoutMillis: 30000,
   connectionTimeoutMillis: 20000,
+  keepAlive: true,
 });
 
 pool.connect()
@@ -22,6 +25,11 @@ const PORT = process.env.PORT || 5000;
 const server = app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on port ${PORT}`);
 });
+
+pool.on("error", (err) => {
+  console.error("Unexpected PG error", err);
+});
+
 
 server.keepAliveTimeout = 120000;
 server.headersTimeout = 120000;
